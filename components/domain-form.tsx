@@ -143,7 +143,7 @@ export default function DomainForm({
             setValue(e.target.value)
             if (error) setError(null)
           }}
-          placeholder="e.g., example.com or münich.de"
+          placeholder="e.g., NIC.RW or F.AF"
           autoCapitalize="none"
           autoCorrect="off"
           spellCheck={false}
