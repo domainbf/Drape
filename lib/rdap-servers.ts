@@ -25,7 +25,7 @@ export const RDAP_BOOTSTRAP: RdapBootstrapEntry[] = [
   },
   {
     tlds: ["name"],
-    servers: ["https://rdap.nic.name/"],
+    servers: ["https://tld-rdap.verisign.com/name/v1/"],
   },
   {
     tlds: ["pro"],
