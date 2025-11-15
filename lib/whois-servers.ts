@@ -64,7 +64,6 @@ const WHOIS_SERVERS = {
   archi: ["whois.nic.archi"],
   army: ["whois.nic.army"],
   arte: ["whois.nic.arte"],
-  arthurd Little: ["whois.nic.arthurd Little"],
   art: ["whois.nic.art"],
   arte: ["whois.nic.arte"],
   as: ["whois.nic.as"],
