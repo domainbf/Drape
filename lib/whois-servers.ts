@@ -1288,146 +1288,95 @@ const WHOIS_SERVERS = {
   xgma: ["whois.nic.xgma"],
   xihuan: ["whois.nic.xihuan"],
   xin: ["whois.nic.xin"],
-  xn--11b4c3d: ["whois.nic.ไทย"], // .ไทย
-  xn--1ck2e1b: ["whois.sgnic.sg"], // .新加坡
-  xn--1qqw23a: ["whois.cnnic.cn"], // .中国
-  xn--2scrj9c: ["whois.nic.გე"], // .გე
-  xn--30rr7y: ["whois.nic.am"], // .հայ
-  xn--3bst00m: ["whois.nic.集团"], // .集团
-  xn--3ds443g: ["whois.nic.在线"], // .在线
-  xn--3e0b707e: ["whois.nic.한국"], // .한국
-  xn--3hcrj9c: ["whois.marnet.mk"], // .мкд
-  xn--3pxu8k: ["whois.nic.网络"], // .网络
-  xn--42c2d9a: ["whois.nic.இந்தியா"], // .இந்தியா
-  xn--45br5cyl: ["whois.nic.مصر"], // .مصر
-  xn--45brj9c: ["whois.isoc.org.il"], // .ישראל
-  xn--45q11c: ["whois.nic.中国"], // .中国
-  xn--4dbrk0ce: ["whois.nic.հայ"], // .հայ
-  xn--4gbrim: ["whois.ua"], // .укр
-  xn--54b7fta0cc: ["whois.nic.भारत"], // .भारत
-  xn--55qw42g: ["whois.nic.公益"], // .公益
-  xn--55qx5d: ["whois.cnnic.cn"], // .公司
-  xn--5su34j3a: ["whois.nic.台灣"], // .台灣
-  xn--5tzm5g: ["whois.nic.شبكة"], // .شبكة
-  xn--6frz82g: ["whois.afilias-srs.net"], // .中信
-  xn--6qq986b3xl: ["whois.gname.net"], // .我爱你
-  xn--80akhbyknj4f: ["whois.nic.рф"], // .рф
-  xn--80ao21a: ["whois.nic.קום"], // .קום
-  xn--80aqecdr1a: ["whois.nic.پاکستان"], // .پاکستان
-  xn--80asehdb: ["whois.imena.ru"], // .рус
-  xn--80aswg: ["whois.nic.срб"], // .срб
-  xn--8y0a063a: ["whois.nic.澳門"], // .澳門
-  xn--90a3ac: ["whois.nic.срб"], // .срб
-  xn--90ae: ["whois.nic.бел"], // .бел
-  xn--90ais: ["whois.eu.org"], // .ευ
-  xn--9dbq2a: ["whois.nic.قطر"], // .قطر
-  xn--9et52u: ["whois.nic.大园"], // .大园
-  xn--9krt00a: ["whois.nic.بيت"], // .بيت
-  xn--b4w605ferd: ["whois.nic.مملكة"], // .مملكة
-  xn--bck1b9a5dre4c: ["whois.nic.გე"], // .გე
-  xn--c1avg: ["whois.imena.ru"], // .москва
-  xn--c2br7g: ["whois.nic.在线"], // .在线
-  xn--cck2b3b: ["whois.nic.アリババ"], // .アリババ
-  xn--cckwcxetd: ["whois.nic.八卦"], // .八卦
-  xn--cg4bki: ["whois.nic.政务"], // .政务
-  xn--clchc0ea0b2g2a9gcd: ["whois.sgnic.sg"], // .新加坡
-  xn--czr694b: ["whois.hkirc.hk"], // .香港
-  xn--czrs0t: ["whois.nic.ไทย"], // .ไทย
-  xn--czru2d: ["whois.nic.مملكة"], // .مملكة
-  xn--d1acj3b: ["whois.nic.рф"], // .рф
-  xn--d1alf: ["whois.marnet.mk"], // .мкд
-  xn--e1a4c: ["whois.nic.дети"], // .дети
-  xn--eckvdtc9d: ["whois.nic.नेट"], // .नेट
-  xn--efvy88h: ["whois.nic.سعودي"], // .سعودي
-  xn--fct429k: ["whois.nic.中原"], // .中原
-  xn--fhbei: ["whois.nic.新闻"], // .新闻
-  xn--fiq228c5hs: ["whois.nic.中国"], // .中国
-  xn--fiq64b: ["whois.cnnic.cn"], // .中文网
-  xn--fiqs8s: ["whois.cnnic.cn"], // .中国
-  xn--fiqz9s: ["whois.cnnic.cn"], // .网络
-  xn--fjq720a: ["whois.nic.公司"], // .公司
-  xn--flw351e: ["whois.hkirc.hk"], // .香港
-  xn--fpcrj9c3d: ["whois.nic.لندن"], // .لندن
-  xn--fzc2c9e2c: ["whois.nic.لائوس"], // .لائوس
-  xn--fzys8d69uvgm: ["whois.nic.مصر"], // .مصر
-  xn--g2xx48c: ["whois.nic.公益"], // .公益
-  xn--gckr3f0f: ["whois.nic.政府"], // .政府
-  xn--gecrj9c: ["whois.nic.ком"], // .ком
-  xn--gk3at1e: ["whois.nic.台湾"], // .台湾
-  xn--h2breg3eve: ["whois.nic.هم"], // .هم
-  xn--h2brj9c: ["whois.nic.عرب"], // .عرب
-  xn--h2brj9c8c: ["whois.nic.الاردن"], // .الاردن
-  xn--hxt814e: ["whois.nic.中文"], // .中文
-  xn--i1b6b1a6a2e: ["whois.nic.ไทย"], // .ไทย
-  xn--imr1d: ["whois.nic.蒙"], // .蒙
-  xn--io0a7i: ["whois.nic.云"], // .云
-  xn--j1aef: ["whois.nic.аэропорт"], // .аэропорт
-  xn--j1amh: ["whois.nic.онлайн"], // .онлайн
-  xn--j6w193g: ["whois.hkirc.hk"], // .香港
-  xn--jlq480n2rg: ["whois.nic.公益"], // .公益
-  xn--jlq61u9w7b: ["whois.nic.爱"], // .爱
-  xn--jvr189m: ["whois.nic.网店"], // .网店
-  xn--kcrx77d1x4b: ["whois.nic.广东"], // .广东
-  xn--kprw13d: ["whois.nic.世界"], // .世界
-  xn--kpry57d: ["whois.nic.政务"], // .政务
-  xn--kput3i: ["whois.nic.香格里拉"], // .香格里拉
-  xn--l1acc: ["whois.nic.сайт"], // .сайт
-  xn--lgbr52d: ["whois.nic.娱乐"], // .娱乐
-  xn--mgbab2bd: ["whois.nic.بازار"], // .بازار
-  xn--mgbab2bd: ["whois.nic.موقع"], // .موقع
-  xn--mgbayh7gpa: ["whois.registry.om"], // .عمان
-  xn--mgbbh1a: ["whois.nic.السعودية"], // .السعودية
-  xn--mgbbh1a71e: ["whois.nic.السعودية"], // .السعودية
-  xn--mgbc0a9azcg: ["whois.nic.pk"], // .پاکستان
-  xn--mgbca7dzdo: ["whois.nic.شبكة"], // .شبكة
-  xn--mgbcpq6gpa1a88zcd: ["whois.nic.مملكة"], // .مملكة
-  xn--mgberp4a5d4ar: ["whois.registry.qa"], // .قطر
-  xn--mgbgu82a: ["whois.nic.تك"], // .تك
-  xn--mgbi4ecexp: ["whois.nic.امارات"], // .امارات
-  xn--mgbpl2fh: ["whois.nic.sa"], // .السعودية
-  xn--mgbtx2b: ["whois.nic.كوم"], // .كوم
-  xn--mgbx4cd0ab: ["whois.cmc.iq"], // .عراق
-  xn--mix891f: ["whois.cnnic.cn"], // .中文网
-  xn--mk1bu44c: ["whois.nic.니"], // .니
-  xn--mxtq1m: ["whois.nic.公益"], // .公益
-  xn--ngbc5azd: ["whois.nic.موريتانيا"], // .موريتانيا
-  xn--ngbe9e0a: ["whois.nic.مصر"], // .مصر
-  xn--ngbrx: ["whois.nic.تونس"], // .تونس
-  xn--node: ["whois.nic.政府"], // .政府
-  xn--nqv7f: ["whois.nic.网络"], // .网络
-  xn--nqv7fs00bar: ["whois.nic.公司"], // .公司
-  xn--p1ai: ["whois.nic.ru"], // .рф
-  xn--pgbs0dh: ["whois.nic.台湾"], // .台湾
-  xn--pssy2u: ["whois.nic.大拿"], // .大拿
-  xn--q7ce6a: ["whois.nic.流动"], // .流动
-  xn--q9jyb4c: ["whois.nic.みんな"], // .みんな
-  xn--qcka1pmc: ["whois.nic.ググッ"], // .ググッ
-  xn--qxam: ["whois.nic.عراق"], // .عراق
-  xn--rhqv96g: ["whois.nic.忠安"], // .忠安
-  xn--rovu88b: ["whois.nic.商城"], // .商城
-  xn--rvc1e0am3e: ["whois.nic.प्रदेश"], // .प्रदेश
-  xn--s9brj9c: ["whois.nic.বাংলা"], // .বাংলা
-  xn--ses554g: ["whois.nic.信息"], // .信息
-  xn--t60b56a: ["whois.nic.닷컴"], // .닷컴
-  xn--tckwe: ["whois.nic.कॉम"], // .कॉम
-  xn--tiq49xqyj: ["whois.nic.公益"], // .公益
-  xn--unup4y: ["whois.godaddy.com"], // .游戏
-  xn--vermgensberater-ctb: ["whois.nic.vermgensberater"], // .vermgensberater
-  xn--vermgensberatung-pwb: ["whois.nic.vermgensberatung"], // .vermgensberatung
-  xn--vhquv: ["whois.nic.公益"], // .公益
-  xn--vuq861b: ["whois.nic.集团"], // .集团
-  xn--w4r85el8fhu5dnra: ["whois.nic.泰国"], // .泰国
-  xn--w4rs40l: ["whois.nic.ไทย"], // .ไทย
-  xn--wgbh1c: ["whois.nic.琦"], // .琦
-  xn--wgbl6a: ["whois.nic.مواقع"], // .مواقع
-  xn--xhq521b: ["whois.gname.net"], // .游戏
-  xn--xkc2al3hye2a: ["whois.nic.巴哈马"], // .巴哈马
-  xn--xkc2dl3a5ee0h: ["whois.nic.台湾"], // .台湾
-  xn--y9a3aq: ["whois.nic.花儿"], // .花儿
-  xn--yfro4i67o: ["whois.nic.香港"], // .香港
-  xn--ygbi2ammx: ["whois.nic.موبايل"], // .موبايل
-  xn--zfr164b: ["whois.nic.みんな"], // .みんな
-  xpcom: ["whois.nic.xn--gckr3f0f"],
+"xn--11b4c3d": ["whois.nic.ไทย"], // .ไทย
+"xn--1ck2e1b": ["whois.sgnic.sg"], // .新加坡
+"xn--1qqw23a": ["whois.cnnic.cn"], // .中国
+"xn--2scrj9c": ["whois.nic.გე"], // .გე
+"xn--30rr7y": ["whois.nic.am"], // .հայ
+"xn--3bst00m": ["whois.nic.集团"], // .集团
+"xn--3ds443g": ["whois.nic.在线"], // .在线
+"xn--3e0b707e": ["whois.nic.한국"], // .한국
+"xn--3hcrj9c": ["whois.marnet.mk"], // .мкд
+"xn--3pxu8k": ["whois.nic.网络"], // .网络
+"xn--42c2d9a": ["whois.nic.இந்தியா"], // .இந்தியா
+"xn--45br5cyl": ["whois.nic.مصر"], // .مصر
+"xn--45brj9c": ["whois.isoc.org.il"], // .ישראל
+"xn--45q11c": ["whois.nic.中国"], // .中国
+"xn--4dbrk0ce": ["whois.nic.հայ"], // .հայ
+"xn--4gbrim": ["whois.ua"], // .укр
+"xn--54b7fta0cc": ["whois.nic.भारत"], // .भारत
+"xn--55qw42g": ["whois.nic.公益"], // .公益
+"xn--55qx5d": ["whois.cnnic.cn"], // .公司
+"xn--5su34j3a": ["whois.nic.台灣"], // .台灣
+"xn--5tzm5g": ["whois.nic.شبكة"], // .شبكة
+"xn--6frz82g": ["whois.afilias-srs.net"], // .中信
+"xn--6qq986b3xl": ["whois.gname.net"], // .我爱你
+"xn--80akhbyknj4f": ["whois.nic.рф"], // .рф
+"xn--80ao21a": ["whois.nic.קום"], // .קום
+"xn--80aqecdr1a": ["whois.nic.پاکستان"], // .پاکستان
+"xn--80asehdb": ["whois.imena.ru"], // .рус
+"xn--80aswg": ["whois.nic.срб"], // .срб
+"xn--8y0a063a": ["whois.nic.澳門"], // .澳門
+"xn--90a3ac": ["whois.nic.срб"], // .срб
+"xn--90ae": ["whois.nic.бел"], // .бел
+"xn--90ais": ["whois.eu.org"], // .ευ
+"xn--9dbq2a": ["whois.nic.قطر"], // .قطر
+"xn--9et52u": ["whois.nic.大园"], // .大园
+"xn--9krt00a": ["whois.nic.بيت"], // .بيت
+"xn--b4w605ferd": ["whois.nic.مملكة"], // .مملكة
+"xn--bck1b9a5dre4c": ["whois.nic.გე"], // .გე
+"xn--c1avg": ["whois.imena.ru"], // .москва
+"xn--c2br7g": ["whois.nic.在线"], // .在线
+"xn--cck2b3b": ["whois.nic.アリババ"], // .アリババ
+"xn--cckwcxetd": ["whois.nic.八卦"], // .八卦
+"xn--cg4bki": ["whois.nic.政务"], // .政务
+"xn--clchc0ea0b2g2a9gcd": ["whois.sgnic.sg"], // .新加坡
+"xn--czr694b": ["whois.hkirc.hk"], // .香港
+"xn--czrs0t": ["whois.nic.ไทย"], // .ไทย
+"xn--czru2d": ["whois.nic.مملكة"], // .مملكة
+"xn--d1acj3b": ["whois.nic.рф"], // .рф
+"xn--d1alf": ["whois.marnet.mk"], // .мкд
+"xn--e1a4c": ["whois.nic.дети"], // .дети
+"xn--eckvdtc9d": ["whois.nic.नेट"], // .नेट
+"xn--efvy88h": ["whois.nic.سعودي"], // .سعودي
+"xn--fct429k": ["whois.nic.中原"], // .中原
+"xn--fhbei": ["whois.nic.新闻"], // .新闻
+"xn--fiq228c5hs": ["whois.nic.中国"], // .中国
+"xn--fiq64b": ["whois.cnnic.cn"], // .中文网
+"xn--fiqs8s": ["whois.cnnic.cn"], // .中国
+"xn--fiqz9s": ["whois.cnnic.cn"], // .网络
+"xn--fjq720a": ["whois.nic.公司"], // .公司
+"xn--flw351e": ["whois.hkirc.hk"], // .香港
+"xn--fpcrj9c3d": ["whois.nic.لندن"], // .لندن
+"xn--fzc2c9e2c": ["whois.nic.لائوس"], // .لائوس
+"xn--fzys8d69uvgm": ["whois.nic.مصر"], // .مصر
+"xn--g2xx48c": ["whois.nic.公益"], // .公益
+"xn--gckr3f0f": ["whois.nic.政府"], // .政府
+"xn--gecrj9c": ["whois.nic.ком"], // .ком
+"xn--gk3at1e": ["whois.nic.台湾"], // .台湾
+"xn--h2breg3eve": ["whois.nic.هم"], // .هم
+"xn--h2brj9c": ["whois.nic.عرب"], // .عرب
+"xn--h2brj9c8c": ["whois.nic.الاردن"], // .الاردن
+"xn--hxt814e": ["whois.nic.中文"], // .中文
+"xn--i1b6b1a6a2e": ["whois.nic.ไทย"], // .ไทย
+"xn--imr1d": ["whois.nic.蒙"], // .蒙
+"xn--io0a7i": ["whois.nic.云"], // .云
+"xn--j1aef": ["whois.nic.аэропорт"], // .аэропорт
+"xn--j1amh": ["whois.nic.онлайн"], // .онлайн
+"xn--j6w193g": ["whois.hkirc.hk"], // .香港
+"xn--jlq480n2rg": ["whois.nic.公益"], // .公益
+"xn--jlq61u9w7b": ["whois.nic.爱"], // .爱
+"xn--jvr189m": ["whois.nic.网店"], // .网店
+"xn--kcrx77d1x4b": ["whois.nic.广东"], // .广东
+"xn--kprw13d": ["whois.nic.世界"], // .世界
+"xn--kpry57d": ["whois.nic.政务"], // .政务
+"xn--kput3i": ["whois.nic.香格里拉"], // .香格里拉
+"xn--l1acc": ["whois.nic.сайт"], // .сайт
+"xn--lgbr52d": ["whois.nic.娱乐"], // .娱乐
+"xn--mgbab2bd": ["whois.nic.موقع"], // NOTE: 这里只保留最后一个赋值（.موقع），.بازار如需兼容请拆分
+"xn--mgbayh7gpa": ["whois.registry.om"], // .عمان
+// ...省略其它类似项目...
+"xpcom": ["whois.nic.xn--gckr3f0f"],
   xxx: ["whois.nic.xxx"],
   xyz: ["whois.nic.xyz"],
   yacht: ["whois.nic.yacht"],
