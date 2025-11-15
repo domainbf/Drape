@@ -159,6 +159,10 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       /datacriação/,
       /注册时间/,
       /创建时间/,
+      /注册日期/,
+      /датарегистрации/,
+      /등록일/,
+      /登録日/,
     ],
     updated: [
       /^(updated|lastupdate|lastmodified|lastchanged|modified|changed)/,
@@ -173,18 +177,21 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       /lastupdateddate/,
       /updatetime/,
       /modificationdate/,
-      /lastupdate/,
       /recordmodified/,
       /lastmodification/,
       /dernièremodification/,
       /últimamodificación/,
       /letzteänderung/,
-      /últimamodificação/,
+      /últimamodificación/,
       /更新时间/,
       /最后更新/,
       /修改时间/,
+      /最后修改/,
       /recordupdate/,
       /domainlastupdate/,
+      /датапоследнегоизменения/,
+      /날짜업데이트/,
+      /更新日時/,
     ],
     expires: [
       /^expir/,
@@ -203,6 +210,12 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       /datadeexpiração/,
       /过期时间/,
       /到期时间/,
+      /到期日期/,
+      /过期日期/,
+      /датаистечения/,
+      /만료일/,
+      /満期日/,
+      /期限日/,
     ],
   }
 
@@ -227,7 +240,6 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       continue
     }
 
-    // Reset contact section on empty line or new section
     if (!line.includes(":")) {
       currentContactSection = null
     }
@@ -243,6 +255,8 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       normalized.includes("registrarname") ||
       normalized.includes("registrarorganization") ||
       normalized.includes("bureaud'enregistrement") ||
+      normalized.includes("domainregistrar") ||
+      normalized.includes("registrarof") ||
       (normalized.match(/^organization/) && i > 0 && normalizeFieldName(lines[i - 1]).includes("registrar"))
     ) {
       if (

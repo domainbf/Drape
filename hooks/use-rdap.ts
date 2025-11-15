@@ -4,6 +4,7 @@ import type { NormalizedRdap } from "@/lib/rdap"
 import { rdapLookup, normalizeWhoisResult, mergeRdapAndWhois } from "@/lib/rdap"
 import { whoisLookup } from "@/lib/whois"
 import { classifyDomainLookupError } from "@/lib/error-classifier"
+import { getCachedDomain, setCachedDomain } from "@/lib/domain-utils"
 
 type UseRdapResult = {
   data?: NormalizedRdap
@@ -39,6 +40,12 @@ export function useRdap(domainAscii?: string | null): UseRdapResult {
     async () => {
       if (!domainAscii) return undefined
 
+      const cached = getCachedDomain(domainAscii)
+      if (cached) {
+        console.log(`[v0] Cache hit for ${domainAscii}`)
+        return cached
+      }
+
       const hasWhoisSupport = isWhoisSupported(domainAscii)
 
       let rdapData: NormalizedRdap | null = null
@@ -48,9 +55,12 @@ export function useRdap(domainAscii?: string | null): UseRdapResult {
 
       try {
         console.log(`[v0] Attempting RDAP lookup for ${domainAscii}`)
+        
         rdapData = await Promise.race([
           rdapLookup(domainAscii),
-          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("RDAP timeout")), 8000)),
+          new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error("RDAP timeout after 8s")), 8000)
+          ),
         ])
         console.log(`[v0] RDAP successful for ${domainAscii}`)
       } catch (err: any) {
@@ -58,40 +68,58 @@ export function useRdap(domainAscii?: string | null): UseRdapResult {
         rdapError = err
       }
 
-      // This is especially important for Chinese and IDN domains that may not have full RDAP support
-      if (!rdapData && hasWhoisSupport) {
+      // Some domains may not be in our WHOIS_SERVERS config but still have working WHOIS servers
+      if (!rdapData) {
         try {
           console.log(`[v0] RDAP failed, attempting WHOIS fallback for ${domainAscii}`)
-          const whoisResult = await whoisLookup(domainAscii)
+          const whoisResult = await Promise.race([
+            whoisLookup(domainAscii),
+            new Promise<never>((_, reject) => 
+              setTimeout(() => reject(new Error("WHOIS timeout after 10s")), 10000)
+            ),
+          ])
           whoisData = normalizeWhoisResult(whoisResult)
           console.log(`[v0] WHOIS successful for ${domainAscii}`)
         } catch (err: any) {
           console.warn(`[v0] WHOIS failed for ${domainAscii}:`, err?.message)
           whoisError = err
         }
-      } else if (rdapData && hasWhoisSupport) {
-        // Do this in parallel but don't block on failure
-        try {
-          const whoisResult = await Promise.race([
-            whoisLookup(domainAscii),
-            new Promise<never>((_, reject) => setTimeout(() => reject(new Error("WHOIS timeout")), 5000)),
-          ])
-          whoisData = normalizeWhoisResult(whoisResult)
-        } catch (err: any) {
-          console.warn(`[v0] Supplementary WHOIS lookup failed for ${domainAscii}`)
-        }
+      } else if (hasWhoisSupport) {
+        whoisLookup(domainAscii)
+          .then((whoisResult) => {
+            whoisData = normalizeWhoisResult(whoisResult)
+            console.log(`[v0] Supplementary WHOIS retrieved for ${domainAscii}`)
+          })
+          .catch((err: any) => {
+            console.log(`[v0] Supplementary WHOIS skipped for ${domainAscii}: ${err?.message}`)
+          })
+          .finally(() => {
+            // Non-blocking operation, no cache update needed
+          })
       }
 
+      let finalResult: NormalizedRdap | undefined
+
       if (rdapData && whoisData) {
-        return mergeRdapAndWhois(rdapData, whoisData)
+        console.log(`[v0] Returning merged data for ${domainAscii}`)
+        finalResult = mergeRdapAndWhois(rdapData, whoisData)
       } else if (rdapData) {
-        return rdapData
+        console.log(`[v0] Returning RDAP data for ${domainAscii}`)
+        finalResult = rdapData
       } else if (whoisData) {
-        return whoisData
+        console.log(`[v0] Returning WHOIS data for ${domainAscii}`)
+        finalResult = whoisData
       } else {
         const errorMessage = createUserFriendlyError(domainAscii, rdapError, whoisError, hasWhoisSupport)
+        console.error(`[v0] Both lookups failed for ${domainAscii}: ${errorMessage}`)
         throw new Error(errorMessage)
       }
+
+      if (finalResult) {
+        setCachedDomain(domainAscii, finalResult)
+      }
+
+      return finalResult
     },
     {
       revalidateOnFocus: false,

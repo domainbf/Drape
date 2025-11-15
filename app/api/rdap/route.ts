@@ -33,10 +33,13 @@ export async function GET(req: Request) {
       console.log(`[v0] RDAP API: Found ${rdapServers.length} RDAP server(s) for TLD`)
     }
 
-    // Only try primary RDAP server directly from local server list
-    const rdapSources = [{ name: "primary", url: rdapUrl }]
+    const rdapSources = rdapServers.map((url, idx) => ({ 
+      name: idx === 0 ? "primary" : `fallback-${idx}`, 
+      url: url.endsWith("/") ? url : `${url}/` 
+    }))
 
     let lastError: any
+    let rdapSuccess = false
 
     for (const source of rdapSources) {
       if (!source.url || source.url.includes("rdap.org")) {
@@ -47,11 +50,16 @@ export async function GET(req: Request) {
       try {
         console.log(`[v0] RDAP API: Trying ${source.name} for ${domain}`)
 
-        const upstream = await fetch(source.url, {
+        const upstreamUrl = `${source.url}domain/${encodeURIComponent(domain)}`
+        
+        const upstream = await fetch(upstreamUrl, {
           method: "GET",
           headers: {
             accept: "application/rdap+json, application/json",
-            "User-Agent": "RDAP-Domain-Lookup/1.0",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 RDAP-Domain-Lookup/1.0",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Cache-Control": "no-cache",
           },
           signal: controller.signal,
         })
@@ -70,6 +78,8 @@ export async function GET(req: Request) {
             continue
           }
           if (upstream.status >= 500) {
+            const responseText = await upstream.text().catch(() => "")
+            console.warn(`[v0] RDAP API: ${source.name} server error (${upstream.status}): ${responseText.substring(0, 200)}`)
             continue
           }
         }
@@ -80,16 +90,25 @@ export async function GET(req: Request) {
         try {
           jsonData = JSON.parse(text)
         } catch (parseErr) {
-          console.warn(`[v0] RDAP API: Failed to parse JSON from ${source.name}`)
+          console.warn(`[v0] RDAP API: Failed to parse JSON from ${source.name}, response preview: ${text.substring(0, 100)}`)
+          lastError = parseErr
           continue
         }
 
         if (!jsonData || typeof jsonData !== "object") {
           console.warn(`[v0] RDAP API: Invalid response format from ${source.name}`)
+          lastError = new Error("Invalid RDAP response format")
+          continue
+        }
+
+        if (!jsonData.ldhName && !jsonData.unicodeName && !jsonData.handle) {
+          console.warn(`[v0] RDAP API: Response lacks domain identifiers from ${source.name}`)
+          lastError = new Error("RDAP response missing domain identifiers")
           continue
         }
 
         console.log(`[v0] RDAP API: Success via ${source.name} for ${domain}`)
+        rdapSuccess = true
 
         const contentType = upstream.headers.get("content-type") || "application/json; charset=utf-8"
 
@@ -116,8 +135,9 @@ export async function GET(req: Request) {
       {
         error: "Domain not found in RDAP registry.",
         whoisAvailable: hasWhoisSupport,
+        rdapError: lastError?.message,
       },
-      { status: 404 },
+      { status: hasWhoisSupport ? 404 : 502 },
     )
   } catch (err: any) {
     console.error(`[v0] RDAP API Error for ${domain}:`, err?.message || err)

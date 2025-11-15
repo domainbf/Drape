@@ -200,7 +200,8 @@ async function fetchRdapJson(url: string) {
     method: "GET",
     headers: {
       accept: "application/rdap+json, application/json",
-      "User-Agent": "RDAP-Domain-Lookup/1.0",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "Referer": "https://rdap.iana.org/",
     },
   })
 
@@ -212,11 +213,27 @@ async function fetchRdapJson(url: string) {
   }
 
   try {
-    const json = await res.json()
+    const text = await res.text()
+    
+    if (!text || text.length === 0) {
+      throw new RdapError("RDAP server returned empty response.")
+    }
+
+    const json = JSON.parse(text)
+    
+    if (!json || typeof json !== "object") {
+      throw new RdapError("RDAP response is not a valid JSON object.")
+    }
+    
+    if (!json.ldhName && !json.unicodeName && !json.handle) {
+      throw new RdapError("RDAP response missing domain identifiers - likely malformed response.")
+    }
+
     return json
-  } catch (err) {
+  } catch (err: any) {
+    if (err instanceof RdapError) throw err
     console.error("[v0] RDAP: JSON parse error:", err)
-    throw new RdapError("Failed to parse RDAP response.")
+    throw new RdapError(`Failed to parse RDAP response: ${err.message}`)
   }
 }
 
@@ -226,7 +243,13 @@ export async function rdapLookup(domainAscii: string): Promise<NormalizedRdap> {
 
   try {
     console.log(`[v0] RDAP: Looking up ${domainAscii} via proxy`)
-    data = await fetchRdapJson(proxyUrl)
+    
+    data = await Promise.race([
+      fetchRdapJson(proxyUrl),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new RdapTimeoutError("RDAP lookup exceeded 7 second timeout")), 7000)
+      ),
+    ])
     console.log(`[v0] RDAP: Successfully retrieved data for ${domainAscii}`)
   } catch (err) {
     console.error(`[v0] RDAP: Lookup failed for ${domainAscii}:`, err)
