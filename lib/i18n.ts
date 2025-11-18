@@ -2,9 +2,9 @@ export type Language = "zh" | "en"
 
 export const translations = {
   zh: {
-    title: "WHOIS+RDAP",
-    description: "输入域名即刻获取域名信息，如果 RDAP 不可用，将回退到 WHOIS。",
-    domainLabel: "不保证任何查询的准确性",
+    title: "RDAP 域名查询",
+    description: "输入域名或 IDN。我们将验证、规范化并转换为 punycode。如果 RDAP 不可用，将回退到 WHOIS。",
+    domainLabel: "域名或 IDN",
     lookupButton: "查询",
     overview: "概览",
     json: "JSON",
@@ -50,10 +50,10 @@ export const translations = {
     checking: "查询中",
   },
   en: {
-    title: "RDAP+WHOIS",
+    title: "RDAP Domain Lookup",
     description:
-      "Note: The domain name results queried on this platform may not be accurate. Please refer to the official results.",
-    domainLabel: "Enter domain name to query",
+      "Enter a domain or IDN. We'll validate, normalize, and convert to punycode on submit. Falls back to WHOIS if RDAP is unavailable.",
+    domainLabel: "Domain or IDN",
     lookupButton: "Lookup",
     overview: "Overview",
     json: "JSON",

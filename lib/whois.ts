@@ -122,124 +122,6 @@ function isValidStatus(value: string): boolean {
   return validStatusKeywords.some((keyword) => lowerValue.includes(keyword))
 }
 
-// Enhanced multi-language field patterns
-const multiLanguagePatterns = {
-  registrar: [
-    // English
-    /registrar:/i,
-    /sponsoring registrar:/i,
-    /registrar name:/i,
-    /registrar organization:/i,
-    // French
-    /bureau d'enregistrement:/i,
-    /registraire:/i,
-    // Spanish
-    /registrador:/i,
-    // German
-    /registrar:/i,
-    /registrierungsstelle:/i,
-    // Chinese
-    /注册商:/,
-    /注册服务机构:/,
-    // Japanese
-    /レジストラ:/,
-    // Russian
-    /регистратор:/i,
-  ],
-  created: [
-    // English
-    /created:/i,
-    /creation date:/i,
-    /registered:/i,
-    /registration date:/i,
-    /domain registration date:/i,
-    // French
-    /date de création:/i,
-    /créé le:/i,
-    // Spanish
-    /fecha de creación:/i,
-    /creado:/i,
-    // German
-    /erstellungsdatum:/i,
-    /angelegt am:/i,
-    // Chinese
-    /创建时间:/,
-    /注册时间:/,
-    /注册日期:/,
-    // Japanese
-    /作成日:/,
-    /登録日:/,
-    // Russian
-    /дата создания:/i,
-    /создан:/i,
-  ],
-  nameserver: [
-    // English
-    /name server:/i,
-    /nameserver:/i,
-    /nserver:/i,
-    /dns:/i,
-    // French
-    /serveur de noms:/i,
-    // Spanish
-    /servidor de nombres:/i,
-    // German
-    /nameserver:/i,
-    // Chinese
-    /域名服务器:/,
-    /名称服务器:/,
-    // Japanese
-    /ネームサーバー:/,
-    // Russian
-    /сервер имен:/i,
-  ],
-  status: [
-    // English
-    /status:/i,
-    /domain status:/i,
-    // French
-    /statut:/i,
-    // Spanish
-    /estado:/i,
-    // German
-    /status:/i,
-    // Chinese
-    /状态:/,
-    // Japanese
-    /ステータス:/,
-    // Russian
-    /статус:/i,
-  ]
-}
-
-// Enhanced field extraction with multi-language support
-function extractFieldValue(line: string, fieldPatterns: RegExp[]): string | null {
-  const lowerLine = line.toLowerCase()
-  
-  for (const pattern of fieldPatterns) {
-    const match = line.match(pattern)
-    if (match) {
-      // Extract value after the field name
-      const value = line.substring(match[0].length).trim()
-      
-      // Handle cases where value might be on next line or separated by special characters
-      if (!value || value === ':' || value === '') {
-        return null // Value likely on next line
-      }
-      
-      // Clean up common separators
-      const cleanedValue = value
-        .replace(/^[:-\s]+/, '') // Remove leading separators
-        .replace(/[\s,;]+$/, '') // Remove trailing separators
-      
-      return cleanedValue || null
-    }
-  }
-  
-  return null
-}
-
-// Enhanced WHOIS response parser with better multi-language and irregular format support
 export function parseWhoisResponse(response: string, domain: string): Partial<WhoisResult> {
   const lines = response.split("\n")
   const result: Partial<WhoisResult> = {
@@ -248,186 +130,117 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
   }
 
   const extractValue = (line: string): string => {
-    // Enhanced extraction to handle various formats
     const colonIndex = line.indexOf(":")
-    const dashIndex = line.indexOf("-")
-    const spaceIndex = line.indexOf(" ")
-    
-    if (colonIndex !== -1) {
-      return line.substring(colonIndex + 1).trim()
-    } else if (dashIndex !== -1 && line.substring(0, dashIndex).trim().length < 20) {
-      return line.substring(dashIndex + 1).trim()
-    } else if (spaceIndex !== -1 && line.substring(0, spaceIndex).trim().length < 20) {
-      return line.substring(spaceIndex + 1).trim()
-    }
-    
-    return line.trim()
+    if (colonIndex === -1) return line.trim()
+    return line.substring(colonIndex + 1).trim()
   }
 
   const isEmptyValue = (value: string): boolean => {
-    const emptyValues = ["—", "-", "N/A", "n/a", "null", "none", "not defined", "not available", "unknown", ""]
-    return !value || emptyValues.includes(value.toLowerCase().trim())
+    return !value || value === "—" || value === "-" || value === "N/A" || value === "n/a" || value === ""
   }
 
   const isEmail = (value: string): boolean => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
   }
 
-  // Enhanced date field patterns with multi-language support
   const dateFieldPatterns = {
     created: [
-      // English
-      /^(created|creation|registered|registration)/i,
-      /domainregistrationdate/i,
-      /regdate/i,
-      /createdate/i,
-      /creationdate/i,
-      /registrationtime/i,
-      /registereddate/i,
-      /domaincreat/i,
-      /registered on/i,
-      // French
-      /datede création/i,
-      /créé le/i,
-      /enregistré le/i,
-      // Spanish
-      /fechadecreación/i,
-      /creado el/i,
-      /registrado el/i,
-      // German
-      /erstellungsdatum/i,
-      /angelegt am/i,
-      /registriert am/i,
-      // Chinese
-      /注册时间/i,
-      /创建时间/i,
-      /注册日期/i,
-      // Japanese
-      /作成日/i,
-      /登録日/i,
-      // Russian
-      /датарегистрации/i,
-      /создан/i,
-      // Korean
-      /등록일/i,
+      /^(created|creation|registered|registration)/,
+      /domainregistrationdate/,
+      /regdate/,
+      /createdate/,
+      /creationdate/,
+      /registrationtime/,
+      /registereddate/,
+      /domaincreat/,
+      /datede création/,
+      /fechadecreación/,
+      /erstellungsdatum/,
+      /datacriação/,
+      /注册时间/,
+      /创建时间/,
+      /注册日期/,
+      /датарегистрации/,
+      /등록일/,
+      /登録日/,
     ],
     updated: [
-      // English
-      /^(updated|lastupdate|lastmodified|lastchanged|modified|changed)/i,
-      /domainupdatedate/i,
-      /lastchange/i,
-      /changeddate/i,
-      /modifieddate/i,
-      /lastupdated/i,
-      /updatedate/i,
-      /recordlastupdate/i,
-      /lastmodifieddate/i,
-      /lastupdateddate/i,
-      /updatetime/i,
-      /modificationdate/i,
-      /recordmodified/i,
-      /lastmodification/i,
-      // French
-      /dernièremodification/i,
-      /modifié le/i,
-      // Spanish
-      /últimamodificación/i,
-      /actualizado el/i,
-      // German
-      /letzteänderung/i,
-      /geändert am/i,
-      // Chinese
-      /更新时间/i,
-      /最后更新/i,
-      /修改时间/i,
-      // Japanese
-      /更新日/i,
-      /最終更新/i,
-      // Russian
-      /датапоследнегоизменения/i,
-      /обновлен/i,
+      /^(updated|lastupdate|lastmodified|lastchanged|modified|changed)/,
+      /domainupdatedate/,
+      /lastchange/,
+      /changeddate/,
+      /modifieddate/,
+      /lastupdated/,
+      /updatedate/,
+      /recordlastupdate/,
+      /lastmodifieddate/,
+      /lastupdateddate/,
+      /updatetime/,
+      /modificationdate/,
+      /recordmodified/,
+      /lastmodification/,
+      /dernièremodification/,
+      /últimamodificación/,
+      /letzteänderung/,
+      /últimamodificación/,
+      /更新时间/,
+      /最后更新/,
+      /修改时间/,
+      /最后修改/,
+      /recordupdate/,
+      /domainlastupdate/,
+      /датапоследнегоизменения/,
+      /날짜업데이트/,
+      /更新日時/,
     ],
     expires: [
-      // English
-      /^expir/i,
-      /renewal/i,
-      /paidtill/i,
-      /expirationdate/i,
-      /expiredate/i,
-      /expire/i,
-      /registryexpiry/i,
-      /registrarexpiry/i,
-      /expirydate/i,
-      /domainexpir/i,
-      /expires on/i,
-      /valid until/i,
-      // French
-      /dated'expiration/i,
-      /expire le/i,
-      // Spanish
-      /fechadeexpiración/i,
-      /expira el/i,
-      // German
-      /ablaufdatum/i,
-      /läuft ab am/i,
-      // Chinese
-      /过期时间/i,
-      /到期时间/i,
-      /到期日期/i,
-      // Japanese
-      /有効期限/i,
-      /満了日/i,
-      // Russian
-      /датаистечения/i,
-      /истекает/i,
+      /^expir/,
+      /renewal/,
+      /paidtill/,
+      /expirationdate/,
+      /expiredate/,
+      /expire/,
+      /registryexpiry/,
+      /registrarexpiry/,
+      /expirydate/,
+      /domainexpir/,
+      /dated'expiration/,
+      /fechadeexpiración/,
+      /ablaufdatum/,
+      /datadeexpiração/,
+      /过期时间/,
+      /到期时间/,
+      /到期日期/,
+      /过期日期/,
+      /датаистечения/,
+      /만료일/,
+      /満期日/,
+      /期限日/,
     ],
   }
 
   const potentialUpdateDates: string[] = []
+
   let currentContactSection: "registrant" | "admin" | "tech" | null = null
 
-  // Pre-process lines to handle multi-line fields
-  const processedLines: string[] = []
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim()
-    
-    // Skip comments and empty lines
-    if (!line || line.startsWith("%") || line.startsWith("#") || line.startsWith(";") || line.startsWith("=")) {
-      continue
-    }
+    if (!line || line.startsWith("%") || line.startsWith("#") || line.startsWith(";") || line.startsWith("=")) continue
 
-    // Handle multi-line values by combining with previous line if current line doesn't have a field marker
-    if (i > 0 && !line.includes(":") && !line.includes("-") && processedLines.length > 0) {
-      const lastIndex = processedLines.length - 1
-      processedLines[lastIndex] += " " + line
-    } else {
-      processedLines.push(line)
-    }
-  }
-
-  // Parse processed lines
-  for (let i = 0; i < processedLines.length; i++) {
-    const line = processedLines[i]
-    if (!line) continue
-
-    // Enhanced section detection
-    const sectionMatch = line.match(/^\[(ADMIN_C|ADMIN|HOLDER|REGISTRANT|TECH_C|TECH|BILLING|OWNER|CONTACT)\]/i)
+    const sectionMatch = line.match(/^\[(ADMIN_C|ADMIN|HOLDER|REGISTRANT|TECH_C|TECH|BILLING)\]/i)
     if (sectionMatch) {
       const section = sectionMatch[1].toLowerCase()
       if (section.includes("admin")) {
         currentContactSection = "admin"
-      } else if (section.includes("holder") || section.includes("registrant") || section.includes("owner")) {
+      } else if (section.includes("holder") || section.includes("registrant")) {
         currentContactSection = "registrant"
       } else if (section.includes("tech")) {
         currentContactSection = "tech"
-      } else if (section.includes("billing")) {
-        currentContactSection = null // Usually not needed for basic info
       }
       continue
     }
 
-    // Reset section context if we encounter a new top-level field
-    if (line.match(/^(Domain|Registrar|Name Server|Status|Created|Updated|Expires)/i)) {
+    if (!line.includes(":")) {
       currentContactSection = null
     }
 
@@ -436,35 +249,30 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
 
     if (isEmptyValue(value)) continue
 
-    // Enhanced registrar extraction with multi-language support
-    if (!result.registrar) {
-      const registrarValue = extractFieldValue(line, multiLanguagePatterns.registrar)
-      if (registrarValue && !isEmptyValue(registrarValue)) {
-        result.registrar = registrarValue
-      } else if (
-        normalized === "registrar" ||
-        normalized.includes("sponsoringregistrar") ||
-        normalized.includes("registrarname") ||
-        normalized.includes("registrarorganization") ||
-        normalized.includes("bureaud'enregistrement") ||
-        normalized.includes("domainregistrar") ||
-        (normalized.match(/^organization/) && i > 0 && normalizeFieldName(processedLines[i - 1]).includes("registrar"))
+    if (
+      normalized === "registrar" ||
+      normalized.includes("sponsoringregistrar") ||
+      normalized.includes("registrarname") ||
+      normalized.includes("registrarorganization") ||
+      normalized.includes("bureaud'enregistrement") ||
+      normalized.includes("domainregistrar") ||
+      normalized.includes("registrarof") ||
+      (normalized.match(/^organization/) && i > 0 && normalizeFieldName(lines[i - 1]).includes("registrar"))
+    ) {
+      if (
+        !result.registrar &&
+        !normalized.includes("phone") &&
+        !normalized.includes("email") &&
+        !normalized.includes("country") &&
+        !normalized.includes("url") &&
+        !normalized.includes("whois") &&
+        !normalized.includes("abuse") &&
+        !normalized.includes("iana")
       ) {
-        if (
-          !normalized.includes("phone") &&
-          !normalized.includes("email") &&
-          !normalized.includes("country") &&
-          !normalized.includes("url") &&
-          !normalized.includes("whois") &&
-          !normalized.includes("abuse") &&
-          !normalized.includes("iana")
-        ) {
-          result.registrar = value
-        }
+        result.registrar = value
       }
     }
 
-    // Enhanced date parsing
     if (dateFieldPatterns.created.some((pattern) => normalized.match(pattern)) && !normalized.includes("expir")) {
       if (!result.createdAt) {
         const parsed = parseDate(value)
@@ -486,14 +294,7 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       }
     }
 
-    // Enhanced nameserver extraction with multi-language support
-    const nsValue = extractFieldValue(line, multiLanguagePatterns.nameserver)
-    if (nsValue && !isEmptyValue(nsValue)) {
-      const cleanNsValue = nsValue.split(/[\s(]/)[0].toLowerCase().trim()
-      if (isValidNameserver(cleanNsValue) && !result.nameservers!.includes(cleanNsValue)) {
-        result.nameservers!.push(cleanNsValue)
-      }
-    } else if (
+    if (
       normalized === "nameserver" ||
       normalized.match(/^nameserver/) ||
       normalized.match(/^nserver/) ||
@@ -504,26 +305,13 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       (normalized.includes("dns") && !normalized.includes("dnssec"))
     ) {
       const nsValue = value.split(/[\s(]/)[0].toLowerCase().trim()
+
       if (isValidNameserver(nsValue) && !result.nameservers!.includes(nsValue)) {
         result.nameservers!.push(nsValue)
       }
     }
 
-    // Enhanced status extraction with multi-language support
-    const statusValue = extractFieldValue(line, multiLanguagePatterns.status)
-    if (statusValue && !isEmptyValue(statusValue)) {
-      const statusParts = statusValue
-        .split(/[,;]/)
-        .map((s) => s.trim())
-        .map((s) => s.replace(/^https?:\/\/.*?\//i, "").trim())
-        .filter((s) => s && s !== "—" && s !== "-" && isValidStatus(s))
-
-      for (const status of statusParts) {
-        if (!result.statuses!.includes(status)) {
-          result.statuses!.push(status)
-        }
-      }
-    } else if (
+    if (
       normalized === "status" ||
       normalized === "statut" ||
       normalized === "estado" ||
@@ -542,29 +330,10 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       }
     }
 
-    // Enhanced contact information extraction
     const contactTypes = [
-      { 
-        key: "registrant", 
-        patterns: [
-          /^registrant/i, /^holder/i, /^titulaire/i, /^titular/i, /^inhaber/i, /^owner/i,
-          /^domain holder/i, /^domain owner/i
-        ] 
-      },
-      { 
-        key: "admin", 
-        patterns: [
-          /^admin/i, /^administrateur/i, /^administrador/i, /^administrative/i,
-          /^admin contact/i
-        ] 
-      },
-      { 
-        key: "tech", 
-        patterns: [
-          /^tech/i, /^technique/i, /^técnico/i, /^technical/i,
-          /^tech contact/i, /^technical contact/i
-        ] 
-      },
+      { key: "registrant", patterns: [/^registrant/, /^holder/, /^titulaire/, /^titular/, /^inhaber/] },
+      { key: "admin", patterns: [/^admin/, /^administrateur/, /^administrador/] },
+      { key: "tech", patterns: [/^tech/, /^technique/, /^técnico/] },
     ]
 
     // Use current section context if available
@@ -574,9 +343,7 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
         normalized === "name" ||
         normalized === "nombre" ||
         normalized.includes("name") ||
-        normalized.includes("nom") ||
-        normalized.includes("full name") ||
-        normalized.includes("contact name")
+        normalized.includes("nom")
       ) {
         const contactKey = `${currentContactSection}Name` as const
         if (!result[contactKey] && !isEmail(value) && !normalized.includes("domain")) {
@@ -584,13 +351,7 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
         }
       }
 
-      if (
-        normalized === "email" || 
-        normalized === "courriel" || 
-        normalized.includes("email") ||
-        normalized.includes("e-mail") ||
-        normalized.includes("mail")
-      ) {
+      if (normalized === "email" || normalized === "courriel" || normalized.includes("email")) {
         const contactKey = `${currentContactSection}Email` as const
         if (!result[contactKey] && isEmail(value)) {
           result[contactKey] = value
@@ -601,9 +362,7 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
         normalized === "organization" ||
         normalized === "organisation" ||
         normalized === "organización" ||
-        normalized.includes("org") ||
-        normalized.includes("company") ||
-        normalized.includes("organization")
+        normalized.includes("org")
       ) {
         const contactKey = `${currentContactSection}Org` as const
         if (!result[contactKey]) {
@@ -614,7 +373,7 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
       // Fallback to pattern matching if no section context
       for (const contactType of contactTypes) {
         if (contactType.patterns.some((pattern) => normalized.match(pattern))) {
-          const nextLine = i + 1 < processedLines.length ? processedLines[i + 1].trim() : ""
+          const nextLine = i + 1 < lines.length ? lines[i + 1].trim() : ""
 
           if (
             (normalized.includes("name") ||
@@ -631,12 +390,7 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
             }
           }
 
-          if (
-            normalized.includes("email") || 
-            normalized.includes("courriel") || 
-            normalized.includes("emailaddress") ||
-            normalized.includes("e-mail")
-          ) {
+          if (normalized.includes("email") || normalized.includes("courriel") || normalized.includes("emailaddress")) {
             const contactKey = `${contactType.key}Email` as const
             if (!result[contactKey] && isEmail(value)) {
               result[contactKey] = value
@@ -647,8 +401,7 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
             normalized.includes("org") ||
             normalized.includes("organization") ||
             normalized.includes("organisation") ||
-            normalized.includes("organización") ||
-            normalized.includes("company")
+            normalized.includes("organización")
           ) {
             const contactKey = `${contactType.key}Org` as const
             if (!result[contactKey]) {
@@ -656,35 +409,6 @@ export function parseWhoisResponse(response: string, domain: string): Partial<Wh
             }
           }
         }
-      }
-    }
-  }
-
-  // Handle special cases for .gg domains and similar formats
-  if (!result.registrar) {
-    // Try to extract registrar from free-form text
-    const registrarMatch = response.match(/Registrar:\s*([^\n\r]+)/i)
-    if (registrarMatch) {
-      result.registrar = registrarMatch[1].trim()
-    }
-  }
-
-  if (!result.createdAt) {
-    // Try to extract creation date from free-form text like "Registered on 30th June 2003"
-    const createdMatch = response.match(/Registered on\s*([^\n\r]+?)(?:\s+at|$)/i)
-    if (createdMatch) {
-      const parsed = parseDate(createdMatch[1].trim())
-      if (parsed) result.createdAt = parsed
-    }
-  }
-
-  if (!result.nameservers || result.nameservers.length === 0) {
-    // Try to extract nameservers from free-form text
-    const nsMatches = response.matchAll(/ns[0-9]?\.[^\s,\r\n]+/gi)
-    for (const match of nsMatches) {
-      const ns = match[0].toLowerCase().trim()
-      if (isValidNameserver(ns) && !result.nameservers.includes(ns)) {
-        result.nameservers.push(ns)
       }
     }
   }
@@ -772,12 +496,7 @@ export async function whoisLookup(domain: string): Promise<WhoisResult> {
 
       const parsed = parseWhoisResponse(data.raw, domain)
 
-      console.log(`[v0] WHOIS: Successfully retrieved data from ${server}`, {
-        registrar: parsed.registrar,
-        nameservers: parsed.nameservers?.length,
-        createdAt: parsed.createdAt,
-        statuses: parsed.statuses?.length
-      })
+      console.log(`[v0] WHOIS: Successfully retrieved data from ${server}`)
 
       return {
         domain,
